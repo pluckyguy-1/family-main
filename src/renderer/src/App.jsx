@@ -1,57 +1,42 @@
 import { useEffect, useState } from 'react'
-import './assets/main.css'
+import logo from '../../../resources/icon.png'
 
 function App() {
-  const [data, setData] = useState({ family_fi: [], jo: [] })
-
+  const [products, setProducts] = useState([]);
+  document.title = 'Продукты';
   useEffect(() => {
-    window.api.getalldb().then(result => setData(result))
+    (async () => {
+      const res = await window.api.getProducts();
+      setProducts(res);
+      console.log(res);
+    })()
   }, [])
 
-  const getJobInfo = (personId) => {
-    const job = data.jo.find(job => job.job_name_id === personId)
-    if (job) {
-      return {
-        prof: job.job_prof,
-        org: job.job_org,
-        salary: job.job_oclad,
-        hasJob: true
-      }
-    } else {
-      return {
-        prof: 'Безработный',
-        org: '-',
-        salary: 0,
-        hasJob: false
-      }
-    }
-  }
 
   return (
-    <div className="container">
-      {data.family_fi.map(person => {
-        const jobInfo = getJobInfo(person.family_fio_id)
-        return (
-          <div key={person.family_fio_id} className="card">
-            <div className="card-title">{person.family_fio_name}</div>
-            <div className="card-info">
-              Возраст: {new Date().getFullYear() - new Date(person.family_fio_date).getFullYear()} лет
-            </div>
-            <div className="card-info">
-              Должность: {jobInfo.prof}
-            </div>
-            <div className="card-info">
-              Место работы: {jobInfo.org}
-            </div>
-            {jobInfo.hasJob && (
-              <div className="card-info">
-                Оклад: {jobInfo.salary} руб.
+    <>
+      <div className='page-heading'>
+        <img alt="logo" className="logo" src={logo} />
+        <h1>Hello, world!</h1>
+      </div>
+      {products.length === 0 ? (
+        <p>Loading...</p>
+      ) : (
+        <ul className='products-list'>
+          {products.map((product, idx) => (
+            <li key={idx} className='product-card'>
+              <div className='product-heading'>
+                <h3>{product.type_name} | {product.product_name}</h3>
+                <p>0(р)</p>
               </div>
-            )}
-          </div>
-        )
-      })}
-    </div>
+              <p>{product.article}</p>
+              <p>{product.min_cost}(р)</p>
+              <p>{product.width}(м)</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   )
 }
 
