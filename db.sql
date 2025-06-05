@@ -1,0 +1,82 @@
+DROP table if exists family_fio cascade;
+DROP table if exists job cascade;
+DROP table if exists family_buyer cascade;
+DROP table if exists categ cascade;
+
+create table family_fio(
+family_fio_id serial primary key,
+family_fio_name TEXT,
+family_fio_date DATE
+);
+
+create table job(
+job_id serial primary key,
+job_name_id INT,
+foreign key (job_name_id) references family_fio(family_fio_id),
+job_prof TEXT,
+job_org TEXT,
+job_oclad INT,
+job_date DATE
+);
+
+create table categ(
+categ_id serial primary key,
+categ_product_id TEXT,
+categ_category TEXT,
+categ_price INT
+);
+
+create table family_buyer(
+family_buyer_id serial primary key,
+family_buyer_date DATE,
+family_buyer_name_id INT,
+foreign key (family_buyer_name_id) references family_fio(family_fio_id),
+family_buyer_names_prod INT,
+foreign key (family_buyer_name_id) references categ(categ_id),
+family_buyer_col INT 
+);
+
+insert into family_fio(family_fio_name, family_fio_date)values
+('Иванов Иван Петрович','15-06-1985'),
+('Иванова Мария Сергеевна','20-09-1987'),
+('Иванов Алексей Иванович','05-02-2010'),
+('Иванова Елена Викторовна','10-03-1959'),
+('Петров Сергей Александрович','05-12-1982');
+
+insert into job(job_name_id, job_prof, job_org, job_oclad, job_date)values
+(1,'Инженер','"ООО ""ТехноСервис"""',85000,'01-03-2015'),
+(2,'Бухгалтер','"АО ""ФинансГрупп"""',75000,'15-04-2012'),
+(4,'Репетитор','Частная практика',15000,'10-01-2020'),
+(5,'Таксист','Индивидуальная работа',30000,'01-09-2020');
+
+
+
+insert into categ(categ_product_id, categ_category, categ_price)values
+('Хлеб','Продукты',50),
+('Молоко','Продукты',80),
+('Бензин','Транспорт',80),
+('Билет в кино','Развлечения',300),
+('Зимнее пальто','Одежда',8500),
+('Учебники','Образование',400),
+('Лекарства','Здоровье',25000),
+('Погашение кредита','Кредиты',89000),
+('Смартфон в подарок','Подарки',99900);
+
+insert into family_buyer(family_buyer_date, family_buyer_name, family_buyer_names_prod, family_buyer_col)values
+('01-02-2025',1,'Хлеб',2),
+('01-02-2025',1,'Молоко',3),
+('01-02-2025',1,'Молоко',1),
+('06-02-2025',2,'Зимнее пальто',1),
+('09-02-2025',5,'Бензин',30),
+('12-02-2025',4,'Лекарства',5),
+('18-02-2025',1,'Погашение кредита',1),
+('22-02-2025',2,'Смартфон в подарок',1),
+('22-02-2025',3,'Билет в кино',1);
+
+
+
+
+
+
+
+
