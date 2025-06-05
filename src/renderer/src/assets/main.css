@@ -1,29 +1,45 @@
 .logo {
-  width: 200px;
-}
-.box{
-  width: 50%;
-  border: 2px solid black;
-
+  width: 50px;
+  height: 50px;
 }
 
-.card {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin: 10px;
-  background-color: #f9f9f9;
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI';
 }
 
-.card-title {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.card-info {
-  margin: 3px 0;
-  color: #333;
-}
-
-.container {
+.products-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   padding: 20px;
+  border: 1px solid black;
+}
+
+.product-card {
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.product-card p,
+h3 {
+  margin: 0;
+}
+
+.product-heading {
+  width: 760px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
