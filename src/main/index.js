@@ -4,28 +4,19 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 import connectDB from './db';
-import { createGunzip } from 'zlib';
 
-async function getall() {
-  const client = global.dbclient
-  const [family_fi, jo, cate, family_buye] = await Promise.all([
-    client.query('SELECT * FROM family_fio'),
-    client.query('SELECT * FROM job'), 
-    client.query('SELECT * FROM categ'),
-    client.query('SELECT * FROM family_buyer')
-  ])
-  return {
-    family_fi : family_fi.rows,
-    jo : jo.rows,
-    cate : cate.rows,
-    family_buye : family_buye.rows, 
-  }
-}
-
-async function foo(event, data) {
+async function getProducts() {
   try {
-    console.log(data)
-    dialog.showMessageBox({ message: 'message back' })
+    const res = await global.dbclient.query(`
+      SELECT product_types.type_name, poducts.article, poducts.product_name, poducts.min_cost, poducts.width
+      FROM (SELECT product_article, SUM(material_amount) AS total_amount
+        FROM product_materials
+        GROUP BY product_article
+        ORDER BY product_article) AS summary
+      JOIN poducts ON poducts.article = summary.product_article
+      JOIN product_types ON poducts.product_type_id = product_types.id
+      `);
+    return res.rows;
   } catch (e) {
     dialog.showErrorBox('Ошибка', e)
   }
@@ -64,10 +55,8 @@ app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.electron')
 
   global.dbclient = await connectDB();
-  
-  ipcMain.handle('getalldb', getall)
 
-  ipcMain.handle('sendSignal', foo)
+  ipcMain.handle('getProducts', getProducts)
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
